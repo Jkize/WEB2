@@ -42,6 +42,33 @@ public class controlador extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        if (request.getParameter("borrar") != null) {
+            String id = request.getParameter("borrar");
+            Persona persona = this.dao.buscar(Integer.parseInt(id));
+            this.dao.borrar(persona);
+
+            ArrayList<Persona> personas = this.dao.listar();
+            //request enviar páginas de una a otra.
+            // Es necesario para enviar la lista al index.josp, enviar datos de una página a otra.
+            RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
+            request.setAttribute("lista", personas);
+
+            rq.forward(request, response);
+
+        }
+
+        if (request.getParameter("editar") != null) {
+            String id = request.getParameter("editar");
+            Persona persona = this.dao.buscar(Integer.parseInt(id));
+            
+            
+            RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
+            request.setAttribute("persona", persona);
+
+            rq.forward(request, response);
+        }
+
     }
 
     /**
@@ -69,7 +96,7 @@ public class controlador extends HttpServlet {
             if (!this.dao.crear(p)) {
                 response.sendRedirect("index.jsp?error=ErrorDatos");
             }
-            
+
             ArrayList<Persona> personas = this.dao.listar();
 //request enviar páginas de una a otra.
             // Es necesario para enviar la lista al index.josp, enviar datos de una página a otra.
