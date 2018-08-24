@@ -196,13 +196,7 @@
                                 <th scope="Apellido">Last</th> 
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
+                        <tbody> 
                             <%
                                 if (request.getAttribute("lista") != null) {
                                     ArrayList personas = (ArrayList<Persona>) request.getAttribute("lista");
@@ -216,17 +210,18 @@
                         <td> <%= persona.getId()%></td>
                         <td><%= persona.getNombre()%></td>
                         <td><%= persona.getApellido()%></td>
+                        <td><a href="controlador?editar=<%=persona.getId()%>">Editar</a>;
+                        <td><a href="controlador?borrar=<%=persona.getId()%>">Borrar</a>;
 
+                            <%
 
-                        <%
+                                    }
 
                                 }
 
-                            }
+                            %>
 
-                        %>
-
-                        </tbody>
+                            </tbody>
                     </table>
 
 
