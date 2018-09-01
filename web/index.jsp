@@ -4,7 +4,8 @@
     Author     : LabingXEON
 --%>
 
-<%@page import="Modelo.Persona"%>
+<%@page import="Modelo.Curso"%>
+ 
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
@@ -171,15 +172,12 @@
                             <form action="controlador" method="POST">
 
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="uid" name="cedula" placeholder="Cedula">
+                                    <input type="text" class="form-control" id="uid" name="id" placeholder="ID">
                                 </div>
 
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="uid" name="nombre" placeholder="Nombre">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="pwd" name="apellido" placeholder="Apellido">
-                                </div>
+                                </div> 
                                 <button type="submit" class="btn btn-default">Registrar</button>
                             </form>
                         </div>
@@ -191,37 +189,37 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="Cedula">#</th>
-                                <th scope="Nombre">First</th>
-                                <th scope="Apellido">Last</th> 
+                                <th scope="ID">#</th>
+                                <th scope="Nombre">First</th> 
                             </tr>
                         </thead>
                         <tbody> 
                             <%
                                 if (request.getAttribute("lista") != null) {
-                                    ArrayList personas = (ArrayList<Persona>) request.getAttribute("lista");
+                                    ArrayList cursos = (ArrayList<Curso>) request.getAttribute("lista");
 
-                                    for (int i = 0; i < personas.size(); i++) {
-                                        Persona persona = (Persona) personas.get(i);
+                                    for (int i = 0; i < cursos.size(); i++) {
+                                        Curso curso = (Curso) cursos.get(i);
 
                             %>
-
+                            
+                            
+                            <tr>
                         <th scope="row"><%=i%></th>
-                        <td> <%= persona.getId()%></td>
-                        <td><%= persona.getNombre()%></td>
-                        <td><%= persona.getApellido()%></td>
-                        <td><a href="controlador?editar=<%=persona.getId()%>">Editar</a>;
-                        <td><a href="controlador?borrar=<%=persona.getId()%>">Borrar</a>;
+                        <td> <%= curso.getId()%></td>
+                        <td><%= curso.getNombre()%></td>
+                            </tr>
 
-                            <%
 
-                                    }
+                        <%
 
                                 }
 
-                            %>
+                            }
 
-                            </tbody>
+                        %>
+
+                        </tbody>
                     </table>
 
 

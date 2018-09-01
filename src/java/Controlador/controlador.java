@@ -5,11 +5,14 @@
  */
 package Controlador;
 
-import Modelo.Persona;
-import dao.DAOPersona;
+import Modelo.Curso;
+import dao.DaoCurso;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +25,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class controlador extends HttpServlet {
 
-    private DAOPersona dao;
+    DaoCurso daocurso;
 
     //es el constructor del Servlet
     @Override
     public void init() throws ServletException {
-        this.dao = new DAOPersona();
+        try {
+            this.daocurso = new DaoCurso();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -42,32 +49,6 @@ public class controlador extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        if (request.getParameter("borrar") != null) {
-            String id = request.getParameter("borrar");
-            Persona persona = this.dao.buscar(Integer.parseInt(id));
-            this.dao.borrar(persona);
-
-            ArrayList<Persona> personas = this.dao.listar();
-            //request enviar páginas de una a otra.
-            // Es necesario para enviar la lista al index.josp, enviar datos de una página a otra.
-            RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("lista", personas);
-
-            rq.forward(request, response);
-
-        }
-
-        if (request.getParameter("editar") != null) {
-            String id = request.getParameter("editar");
-            Persona persona = this.dao.buscar(Integer.parseInt(id));
-            
-            
-            RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("persona", persona);
-
-            rq.forward(request, response);
-        }
 
     }
 
@@ -85,23 +66,18 @@ public class controlador extends HttpServlet {
 
         //Capturar los parametros.
         // nombre--> el name de la clase donde está el login.
-        String cedula = request.getParameter("cedula");
-        String nombre = request.getParameter("nombre");
-        String apellido = request.getParameter("apellido");
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nombre = (request.getParameter("nombre") + "                  ").substring(0, 10);
         //Validaciones - SQL Inyection.
 
-        if (nombre != null && apellido != null && nombre.length() > 0) {
-            Persona p = new Persona(Integer.parseInt(cedula), nombre, apellido);
-
-            if (!this.dao.crear(p)) {
-                response.sendRedirect("index.jsp?error=ErrorDatos");
-            }
-
-            ArrayList<Persona> personas = this.dao.listar();
+        if (id != 0 && nombre.length() > 0) {
+            Curso curso = new Curso(id, nombre);
+            this.daocurso.crear(curso);
+            ArrayList<Curso> cursos = this.daocurso.obtenercursos();
 //request enviar páginas de una a otra.
             // Es necesario para enviar la lista al index.josp, enviar datos de una página a otra.
             RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
-            request.setAttribute("lista", personas);
+            request.setAttribute("lista", cursos);
 
             rq.forward(request, response);
 
